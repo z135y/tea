@@ -3,30 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCA x TAGs 評鑑 (Cloud Sync Ver.)</title>
+    <title>SCA x TAGs 評鑑 (Connected)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* 保持原本的優雅設計 */
+        /* 風格：結合咖啡館的沉穩與茶藝的清爽 */
         body { font-family: "Microsoft JhengHei", sans-serif; background: #ece9e6; display: flex; justify-content: center; padding: 20px; min-height: 100vh; color: #2c3e50; }
         .container { background: white; width: 100%; max-width: 1200px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; overflow: hidden; margin-bottom: 50px; }
+        
+        /* 左側：控制台 */
         .controls { flex: 1; min-width: 350px; padding: 40px; background: #f8f9fa; border-right: 1px solid #e0e0e0; height: 85vh; overflow-y: auto; }
-        .header { margin-bottom: 25px; border-bottom: 3px solid #6f4e37; padding-bottom: 15px; }
+        .header { margin-bottom: 25px; border-bottom: 3px solid #6f4e37; padding-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
         h2 { margin: 0; color: #6f4e37; font-size: 24px; font-weight: 800; }
         .badge { background: #27ae60; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
+        
         .section-title { font-size: 14px; color: #888; margin: 20px 0 10px 0; border-left: 3px solid #27ae60; padding-left: 8px; font-weight: bold; }
+
         .input-group { margin-bottom: 15px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; color: #34495e; font-size: 14px; }
-        input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+        input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 15px; font-family: inherit; box-sizing: border-box; }
         input[type="color"] { width: 100%; height: 45px; border: none; padding: 0; cursor: pointer; }
+        
+        /* 混合指標區塊 */
         .hybrid-slider { margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 8px; border-left: 4px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: 0.3s; }
         .hybrid-slider:hover { border-left-color: #6f4e37; transform: translateX(5px); }
+        
         .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .term-coffee { font-size: 16px; font-weight: 900; color: #6f4e37; } .term-tea { font-size: 14px; color: #27ae60; font-weight: bold; } .term-desc { font-size: 12px; color: #7f8c8d; margin-bottom: 10px; display: block; }
+        .term-coffee { font-size: 16px; font-weight: 900; color: #6f4e37; } 
+        .term-tea { font-size: 14px; color: #27ae60; font-weight: bold; } 
+        .term-desc { font-size: 12px; color: #7f8c8d; margin-bottom: 10px; display: block; }
+        
         input[type="range"] { width: 100%; accent-color: #6f4e37; cursor: pointer; }
         .val-display { font-weight: bold; color: #6f4e37; font-size: 18px; }
+
+        /* 右側：預覽 */
         .preview { flex: 1.4; min-width: 400px; padding: 40px; display: flex; flex-direction: column; align-items: center; background: #fff; }
         .btn-submit { margin-top: 20px; background: linear-gradient(45deg, #27ae60, #2ecc71); color: white; border: none; padding: 15px 40px; font-size: 16px; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3); transition: 0.3s; display: flex; align-items: center; gap: 10px; }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4); }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* 管理員按鈕 */
+        .admin-footer { position: fixed; bottom: 10px; right: 10px; z-index: 100; display: flex; gap: 10px; }
+        .btn-admin { background: #2c3e50; color: #fff; border: 1px solid #34495e; padding: 8px 15px; font-size: 12px; border-radius: 4px; cursor: pointer; opacity: 0.8; transition: 0.3s; }
+        .btn-admin:hover { opacity: 1; }
+        .btn-clear { background: #c0392b; border-color: #e74c3c; }
+
         @media (max-width: 768px) { .container { flex-direction: column; } .controls { border-right: none; height: auto; } }
     </style>
 </head>
@@ -35,39 +55,93 @@
 <div class="container">
     <div class="controls">
         <div class="header">
-            <h2>SCA x TAGs 評鑑 <span class="badge">Google Sync</span></h2>
+            <h2>SCA x TAGs 評鑑 <span class="badge">已連線</span></h2>
         </div>
         
-        <div class="section-title">👤 評鑑者資訊</div>
-        <div class="input-group"><label>姓名</label><input type="text" id="cupperName" placeholder="您的稱呼"></div>
-        <div class="input-group"><label>Email</label><input type="email" id="cupperEmail" placeholder="用於建檔"></div>
+        <div class="section-title">👤 評鑑者資訊 (Cupper Info)</div>
+        <div class="input-group"><label>評鑑者姓名 (Name)</label><input type="text" id="cupperName" placeholder="您的稱呼"></div>
+        <div class="input-group"><label>聯絡 Email (Optional)</label><input type="email" id="cupperEmail" placeholder="用於建檔"></div>
 
-        <div class="section-title">🍵 茶品設定</div>
+        <div class="section-title">🍵 茶品設定 (Tea Info)</div>
         <div class="input-group"><label>品項名稱</label><input type="text" id="teaName" value="2025 蜜香紅茶・手沖" oninput="updateChart()"></div>
-        <div class="input-group"><label>代表色</label><input type="color" id="themeColor" value="#A0522D" oninput="updateChart()"></div>
+        <div class="input-group"><label>視覺主題色</label><input type="color" id="themeColor" value="#A0522D" oninput="updateChart()"></div>
         <div class="input-group"><label>杯測筆記</label><textarea id="teaDesc" rows="3" placeholder="風味敘述..." oninput="updateChart()"></textarea></div>
 
-        <div class="section-title">📊 風味評分</div>
-        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Acidity</span> / <span class="term-tea">明亮鮮爽</span></div><span class="val-display" id="v1">4.0</span></div><input type="range" id="p1" min="0" max="5" step="0.1" value="4.0" oninput="updateChart()"></div>
-        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Sweetness</span> / <span class="term-tea">回甘蜜韻</span></div><span class="val-display" id="v2">4.5</span></div><input type="range" id="p2" min="0" max="5" step="0.1" value="4.5" oninput="updateChart()"></div>
-        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Body</span> / <span class="term-tea">茶湯稠度</span></div><span class="val-display" id="v3">4.2</span></div><input type="range" id="p3" min="0" max="5" step="0.1" value="4.2" oninput="updateChart()"></div>
-        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Aroma</span> / <span class="term-tea">層次調性</span></div><span class="val-display" id="v4">4.8</span></div><input type="range" id="p4" min="0" max="5" step="0.1" value="4.8" oninput="updateChart()"></div>
-        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Balance</span> / <span class="term-tea">協調性</span></div><span class="val-display" id="v5">4.3</span></div><input type="range" id="p5" min="0" max="5" step="0.1" value="4.3" oninput="updateChart()"></div>
-        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Structure</span> / <span class="term-tea">收斂轉化</span></div><span class="val-display" id="v6">3.8</span></div><input type="range" id="p6" min="0" max="5" step="0.1" value="3.8" oninput="updateChart()"></div>
+        <div class="section-title">📊 風味評分 (Scoring)</div>
+        
+        <div class="hybrid-slider">
+            <div class="slider-header">
+                <div><span class="term-coffee">Acidity 酸質</span> / <span class="term-tea">明亮鮮爽</span></div>
+                <span class="val-display" id="v1">4.0</span>
+            </div>
+            <span class="term-desc">SCA: 明亮度 ⇄ TAGs: 活性/果酸韻</span>
+            <input type="range" id="p1" min="0" max="5" step="0.1" value="4.0" oninput="updateChart()">
+        </div>
+
+        <div class="hybrid-slider">
+            <div class="slider-header">
+                <div><span class="term-coffee">Sweetness 甜感</span> / <span class="term-tea">回甘蜜韻</span></div>
+                <span class="val-display" id="v2">4.5</span>
+            </div>
+            <span class="term-desc">SCA: 焦糖甜 ⇄ TAGs: 生津/喉韻</span>
+            <input type="range" id="p2" min="0" max="5" step="0.1" value="4.5" oninput="updateChart()">
+        </div>
+
+        <div class="hybrid-slider">
+            <div class="slider-header">
+                <div><span class="term-coffee">Body 醇厚度</span> / <span class="term-tea">茶湯稠度</span></div>
+                <span class="val-display" id="v3">4.2</span>
+            </div>
+            <span class="term-desc">SCA: 重量感 ⇄ TAGs: 飽滿度</span>
+            <input type="range" id="p3" min="0" max="5" step="0.1" value="4.2" oninput="updateChart()">
+        </div>
+
+        <div class="hybrid-slider">
+            <div class="slider-header">
+                <div><span class="term-coffee">Aroma 香氣</span> / <span class="term-tea">層次調性</span></div>
+                <span class="val-display" id="v4">4.8</span>
+            </div>
+            <span class="term-desc">SCA: 乾濕香 ⇄ TAGs: 香氣揚起度</span>
+            <input type="range" id="p4" min="0" max="5" step="0.1" value="4.8" oninput="updateChart()">
+        </div>
+
+        <div class="hybrid-slider">
+            <div class="slider-header">
+                <div><span class="term-coffee">Balance 平衡</span> / <span class="term-tea">協調性</span></div>
+                <span class="val-display" id="v5">4.3</span>
+            </div>
+            <span class="term-desc">SCA: 無缺陷 ⇄ TAGs: 融合度</span>
+            <input type="range" id="p5" min="0" max="5" step="0.1" value="4.3" oninput="updateChart()">
+        </div>
+
+        <div class="hybrid-slider">
+            <div class="slider-header">
+                <div><span class="term-coffee">Structure 結構</span> / <span class="term-tea">收斂轉化</span></div>
+                <span class="val-display" id="v6">3.8</span>
+            </div>
+            <span class="term-desc">SCA: 骨架 ⇄ TAGs: 收斂感(單寧)</span>
+            <input type="range" id="p6" min="0" max="5" step="0.1" value="3.8" oninput="updateChart()">
+        </div>
     </div>
 
     <div class="preview">
-        <div style="width:100%; max-width:550px; position:relative;"><canvas id="radarChart"></canvas></div>
+        <div style="width:100%; max-width:550px; position:relative;">
+            <canvas id="radarChart"></canvas>
+        </div>
         <button class="btn-submit" id="submitBtn" onclick="saveToGoogleSheet()">
             ☁️ 上傳 Google Sheet 並下載圖卡
         </button>
-        <p style="font-size:12px; color:#888; margin-top:10px;">*數據將即時同步至您的雲端試算表</p>
+        <p style="font-size:12px; color:#888; margin-top:10px;">*數據將自動同步至您的 Google 試算表</p>
     </div>
+</div>
+
+<div class="admin-footer">
+    <button class="btn-admin" onclick="exportData()">📥 備份 CSV</button>
 </div>
 
 <script>
     // ==========================================
-    // ✅ 已植入您的 Google Apps Script 網址
+    // ✅ 您的 Google Apps Script URL (已更新)
     // ==========================================
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxAtDRydSip_hLcP17lI5wLRkU7hSzxNkJvdRTPUbst72OUVadxxQtWJKyvI_Ho9Mk/exec";
     // ==========================================
@@ -154,9 +228,9 @@
     function saveToGoogleSheet() {
         const btn = document.getElementById('submitBtn');
 
-        // 1. 鎖定按鈕避免重複點擊
+        // 1. 鎖定按鈕
         btn.disabled = true;
-        btn.innerText = "☁️ 上傳中...";
+        btn.innerText = "☁️ 連線中... (請稍候)";
 
         const data = {
             cupper: document.getElementById('cupperName').value || 'Anonymous',
@@ -166,25 +240,50 @@
             note: document.getElementById('teaDesc').value || ''
         };
 
-        // 2. 發送資料 (跨域 POST)
+        // 2. 發送資料
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
-            mode: "no-cors", // 重要：Google Apps Script 簡易請求需要此模式
+            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         })
         .then(() => {
-            alert("✅ 資料已成功上傳至 Google Sheet！\n(圖片將接著下載)");
-            downloadImage(); // 上傳成功後，自動下載圖片
+            // Google 回傳 no-cors 狀態下我們無法讀取 response，但只要沒報錯通常就是成功
+            alert("✅ 成功！資料已同步至試算表。\n(圖片將自動下載)");
+            
+            // 自動備份一份到 LocalStorage (雙重保險)
+            let records = JSON.parse(localStorage.getItem('sca_tags_backup')) || [];
+            records.push({date: new Date().toLocaleString(), ...data});
+            localStorage.setItem('sca_tags_backup', JSON.stringify(records));
+
+            downloadImage();
+            
             btn.disabled = false;
             btn.innerText = "☁️ 上傳 Google Sheet 並下載圖卡";
         })
         .catch(error => {
             console.error('Error:', error);
-            alert("❌ 上傳失敗，請檢查網路或 Script 設定");
+            alert("❌ 連線異常，請檢查網路。");
             btn.disabled = false;
-            btn.innerText = "☁️ 上傳 Google Sheet 並下載圖卡";
+            btn.innerText = "☁️ 重新上傳";
         });
+    }
+
+    // 備用功能：匯出 CSV
+    function exportData() {
+        let records = JSON.parse(localStorage.getItem('sca_tags_backup')) || [];
+        if(records.length === 0) { alert("目前本機沒有備份資料！"); return; }
+        let csvContent = "\uFEFF時間,姓名,Email,茶品,分數,筆記\n";
+        records.forEach(r => {
+            csvContent += `${r.date},${r.cupper},${r.email},${r.tea},"${r.scores.join('|')}","${r.note.replace(/\n/g,' ')}"\n`;
+        });
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "Backup_Data.csv";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     window.onload = initChart;
