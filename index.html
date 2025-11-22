@@ -3,41 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCA x TAGs 跨界風味評鑑</title>
+    <title>SCA x TAGs 評鑑 (Cloud Sync Ver.)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* 風格：結合咖啡館的沉穩與茶藝的清爽 */
+        /* 保持原本的優雅設計 */
         body { font-family: "Microsoft JhengHei", sans-serif; background: #ece9e6; display: flex; justify-content: center; padding: 20px; min-height: 100vh; color: #2c3e50; }
-        .container { background: white; width: 100%; max-width: 1200px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; overflow: hidden; }
-        
-        /* 左側：控制台 */
+        .container { background: white; width: 100%; max-width: 1200px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; overflow: hidden; margin-bottom: 50px; }
         .controls { flex: 1; min-width: 350px; padding: 40px; background: #f8f9fa; border-right: 1px solid #e0e0e0; height: 85vh; overflow-y: auto; }
-        .header { margin-bottom: 25px; border-bottom: 3px solid #6f4e37; padding-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .header { margin-bottom: 25px; border-bottom: 3px solid #6f4e37; padding-bottom: 15px; }
         h2 { margin: 0; color: #6f4e37; font-size: 24px; font-weight: 800; }
-        .badge { background: #6f4e37; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
-        
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; color: #34495e; }
-        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 15px; font-family: inherit; }
+        .badge { background: #27ae60; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
+        .section-title { font-size: 14px; color: #888; margin: 20px 0 10px 0; border-left: 3px solid #27ae60; padding-left: 8px; font-weight: bold; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #34495e; font-size: 14px; }
+        input[type="text"], input[type="email"], textarea { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
         input[type="color"] { width: 100%; height: 45px; border: none; padding: 0; cursor: pointer; }
-        
-        /* 混合指標區塊 */
         .hybrid-slider { margin-bottom: 25px; background: #fff; padding: 15px; border-radius: 8px; border-left: 4px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.03); transition: 0.3s; }
         .hybrid-slider:hover { border-left-color: #6f4e37; transform: translateX(5px); }
-        
         .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .term-coffee { font-size: 16px; font-weight: 900; color: #6f4e37; } /* 咖啡用語 */
-        .term-tea { font-size: 14px; color: #27ae60; font-weight: bold; } /* 茶葉用語 */
-        .term-desc { font-size: 12px; color: #7f8c8d; margin-bottom: 10px; display: block; }
-        
+        .term-coffee { font-size: 16px; font-weight: 900; color: #6f4e37; } .term-tea { font-size: 14px; color: #27ae60; font-weight: bold; } .term-desc { font-size: 12px; color: #7f8c8d; margin-bottom: 10px; display: block; }
         input[type="range"] { width: 100%; accent-color: #6f4e37; cursor: pointer; }
         .val-display { font-weight: bold; color: #6f4e37; font-size: 18px; }
-
-        /* 右側：預覽 */
         .preview { flex: 1.4; min-width: 400px; padding: 40px; display: flex; flex-direction: column; align-items: center; background: #fff; }
-        .btn-download { margin-top: 20px; background: #6f4e37; color: white; border: none; padding: 15px 40px; font-size: 16px; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(111, 78, 55, 0.3); transition: 0.3s; }
-        .btn-download:hover { background: #5a3e2b; transform: translateY(-2px); }
-
+        .btn-submit { margin-top: 20px; background: linear-gradient(45deg, #27ae60, #2ecc71); color: white; border: none; padding: 15px 40px; font-size: 16px; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3); transition: 0.3s; display: flex; align-items: center; gap: 10px; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4); }
         @media (max-width: 768px) { .container { flex-direction: column; } .controls { border-right: none; height: auto; } }
     </style>
 </head>
@@ -46,118 +35,48 @@
 <div class="container">
     <div class="controls">
         <div class="header">
-            <h2>SCA x TAGs 評鑑 <span class="badge">Hybrid</span></h2>
+            <h2>SCA x TAGs 評鑑 <span class="badge">Google Sync</span></h2>
         </div>
         
-        <div class="input-group">
-            <label>品項名稱 (Item Name)</label>
-            <input type="text" id="teaName" value="2025 蜜香紅茶・手沖" oninput="updateChart()">
-        </div>
-        <div class="input-group">
-            <label>視覺主題色 (Theme)</label>
-            <input type="color" id="themeColor" value="#A0522D" oninput="updateChart()">
-        </div>
-        <div class="input-group">
-            <label>杯測筆記 (Cupping Notes)</label>
-            <textarea id="teaDesc" rows="3" placeholder="例如：入口帶有類似耶加雪菲的柑橘酸，中段轉為熟成蜜蘋果甜感，Body 黏稠度佳..." oninput="updateChart()"></textarea>
-        </div>
+        <div class="section-title">👤 評鑑者資訊</div>
+        <div class="input-group"><label>姓名</label><input type="text" id="cupperName" placeholder="您的稱呼"></div>
+        <div class="input-group"><label>Email</label><input type="email" id="cupperEmail" placeholder="用於建檔"></div>
 
-        <div class="hybrid-slider">
-            <div class="slider-header">
-                <div>
-                    <span class="term-coffee">Acidity 酸質</span> / <span class="term-tea">明亮鮮爽</span>
-                </div>
-                <span class="val-display" id="v1">4.0</span>
-            </div>
-            <span class="term-desc">SCA: 明亮度與活潑感 ⇄ TAGs: 茶湯活性與果酸韻</span>
-            <input type="range" id="p1" min="0" max="5" step="0.1" value="4.0" oninput="updateChart()">
-        </div>
+        <div class="section-title">🍵 茶品設定</div>
+        <div class="input-group"><label>品項名稱</label><input type="text" id="teaName" value="2025 蜜香紅茶・手沖" oninput="updateChart()"></div>
+        <div class="input-group"><label>代表色</label><input type="color" id="themeColor" value="#A0522D" oninput="updateChart()"></div>
+        <div class="input-group"><label>杯測筆記</label><textarea id="teaDesc" rows="3" placeholder="風味敘述..." oninput="updateChart()"></textarea></div>
 
-        <div class="hybrid-slider">
-            <div class="slider-header">
-                <div>
-                    <span class="term-coffee">Sweetness 甜感</span> / <span class="term-tea">回甘蜜韻</span>
-                </div>
-                <span class="val-display" id="v2">4.5</span>
-            </div>
-            <span class="term-desc">SCA: 焦糖/水果甜 ⇄ TAGs: 飲後生津與喉韻持久度</span>
-            <input type="range" id="p2" min="0" max="5" step="0.1" value="4.5" oninput="updateChart()">
-        </div>
-
-        <div class="hybrid-slider">
-            <div class="slider-header">
-                <div>
-                    <span class="term-coffee">Body 醇厚度</span> / <span class="term-tea">茶湯稠度</span>
-                </div>
-                <span class="val-display" id="v3">4.2</span>
-            </div>
-            <span class="term-desc">SCA: 口感重量(Weight) ⇄ TAGs: 飽滿度與果膠質感</span>
-            <input type="range" id="p3" min="0" max="5" step="0.1" value="4.2" oninput="updateChart()">
-        </div>
-
-        <div class="hybrid-slider">
-            <div class="slider-header">
-                <div>
-                    <span class="term-coffee">Aroma 香氣</span> / <span class="term-tea">層次調性</span>
-                </div>
-                <span class="val-display" id="v4">4.8</span>
-            </div>
-            <span class="term-desc">SCA: 乾/濕香強度 ⇄ TAGs: 花果/焙火香氣之揚起度</span>
-            <input type="range" id="p4" min="0" max="5" step="0.1" value="4.8" oninput="updateChart()">
-        </div>
-
-        <div class="hybrid-slider">
-            <div class="slider-header">
-                <div>
-                    <span class="term-coffee">Balance 平衡</span> / <span class="term-tea">協調性</span>
-                </div>
-                <span class="val-display" id="v5">4.3</span>
-            </div>
-            <span class="term-desc">SCA: 風味無缺陷 ⇄ TAGs: 香氣滋味口感之融合度</span>
-            <input type="range" id="p5" min="0" max="5" step="0.1" value="4.3" oninput="updateChart()">
-        </div>
-
-        <div class="hybrid-slider">
-            <div class="slider-header">
-                <div>
-                    <span class="term-coffee">Structure 結構</span> / <span class="term-tea">收斂轉化</span>
-                </div>
-                <span class="val-display" id="v6">3.8</span>
-            </div>
-            <span class="term-desc">SCA: 骨架支撐 ⇄ TAGs: 微澀化開後的立體感 (單寧)</span>
-            <input type="range" id="p6" min="0" max="5" step="0.1" value="3.8" oninput="updateChart()">
-        </div>
-
+        <div class="section-title">📊 風味評分</div>
+        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Acidity</span> / <span class="term-tea">明亮鮮爽</span></div><span class="val-display" id="v1">4.0</span></div><input type="range" id="p1" min="0" max="5" step="0.1" value="4.0" oninput="updateChart()"></div>
+        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Sweetness</span> / <span class="term-tea">回甘蜜韻</span></div><span class="val-display" id="v2">4.5</span></div><input type="range" id="p2" min="0" max="5" step="0.1" value="4.5" oninput="updateChart()"></div>
+        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Body</span> / <span class="term-tea">茶湯稠度</span></div><span class="val-display" id="v3">4.2</span></div><input type="range" id="p3" min="0" max="5" step="0.1" value="4.2" oninput="updateChart()"></div>
+        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Aroma</span> / <span class="term-tea">層次調性</span></div><span class="val-display" id="v4">4.8</span></div><input type="range" id="p4" min="0" max="5" step="0.1" value="4.8" oninput="updateChart()"></div>
+        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Balance</span> / <span class="term-tea">協調性</span></div><span class="val-display" id="v5">4.3</span></div><input type="range" id="p5" min="0" max="5" step="0.1" value="4.3" oninput="updateChart()"></div>
+        <div class="hybrid-slider"><div class="slider-header"><div><span class="term-coffee">Structure</span> / <span class="term-tea">收斂轉化</span></div><span class="val-display" id="v6">3.8</span></div><input type="range" id="p6" min="0" max="5" step="0.1" value="3.8" oninput="updateChart()"></div>
     </div>
 
     <div class="preview">
-        <div style="width:100%; max-width:550px; position:relative;">
-            <canvas id="radarChart"></canvas>
-        </div>
-        <button class="btn-download" onclick="downloadImage()">📸 下載專屬風味圖卡</button>
+        <div style="width:100%; max-width:550px; position:relative;"><canvas id="radarChart"></canvas></div>
+        <button class="btn-submit" id="submitBtn" onclick="saveToGoogleSheet()">
+            ☁️ 上傳 Google Sheet 並下載圖卡
+        </button>
+        <p style="font-size:12px; color:#888; margin-top:10px;">*數據將即時同步至您的雲端試算表</p>
     </div>
 </div>
 
 <script>
-    let myChart;
-    // 混合標籤：上方是咖啡術語，下方是茶術語 (用於雷達圖顯示)
-    const labels = [
-        ['Acidity', '明亮/鮮爽'], 
-        ['Sweetness', '甜感/回甘'], 
-        ['Body', '醇厚/稠度'], 
-        ['Aroma', '香氣/層次'], 
-        ['Balance', '平衡/協調'], 
-        ['Structure', '結構/收斂']
-    ];
+    // ==========================================
+    // ✅ 已植入您的 Google Apps Script 網址
+    // ==========================================
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxAtDRydSip_hLcP17lI5wLRkU7hSzxNkJvdRTPUbst72OUVadxxQtWJKyvI_Ho9Mk/exec";
+    // ==========================================
 
-    // 定義對照表 (用於下載圖片時的底部說明)
+    let myChart;
+    const labels = [['Acidity','明亮鮮爽'],['Sweetness','回甘蜜韻'],['Body','茶湯稠度'],['Aroma','層次調性'],['Balance','協調性'],['Structure','收斂轉化']];
     const legendData = [
-        {coffee: "Acidity (酸質)", tea: "明亮鮮爽", desc: "果酸韻與茶湯活性"},
-        {coffee: "Sweetness (甜感)", tea: "回甘蜜韻", desc: "飲後生津與喉韻"},
-        {coffee: "Body (醇厚度)", tea: "茶湯稠度", desc: "液體重量與飽滿感"},
-        {coffee: "Aroma (香氣)", tea: "層次調性", desc: "乾濕香與前中後調"},
-        {coffee: "Balance (平衡)", tea: "協調性", desc: "風味融合無缺陷"},
-        {coffee: "Structure (結構)", tea: "收斂轉化", desc: "單寧感與立體骨架"}
+        {coffee:"Acidity",tea:"明亮鮮爽",desc:"果酸韻與茶湯活性"}, {coffee:"Sweetness",tea:"回甘蜜韻",desc:"飲後生津與喉韻"}, {coffee:"Body",tea:"茶湯稠度",desc:"液體重量與飽滿感"},
+        {coffee:"Aroma",tea:"層次調性",desc:"乾濕香與前中後調"}, {coffee:"Balance",tea:"協調性",desc:"風味融合無缺陷"}, {coffee:"Structure",tea:"收斂轉化",desc:"單寧感與立體骨架"}
     ];
 
     function initChart() {
@@ -166,31 +85,9 @@
             type: 'radar',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'Score',
-                    data: [4.0, 4.5, 4.2, 4.8, 4.3, 3.8],
-                    fill: true,
-                    backgroundColor: 'rgba(160, 82, 45, 0.2)',
-                    borderColor: '#A0522D',
-                    pointBackgroundColor: '#A0522D',
-                    pointBorderColor: '#fff',
-                    borderWidth: 3,
-                    pointRadius: 5
-                }]
+                datasets: [{ label: 'Score', data: [4.0, 4.5, 4.2, 4.8, 4.3, 3.8], fill: true, backgroundColor: 'rgba(160, 82, 45, 0.2)', borderColor: '#A0522D', pointBackgroundColor: '#A0522D', pointBorderColor: '#fff', borderWidth: 3, pointRadius: 5 }]
             },
-            options: {
-                responsive: true,
-                scales: {
-                    r: {
-                        angleLines: { color: '#e0e0e0' },
-                        grid: { color: '#f0f0f0' },
-                        suggestedMin: 0, suggestedMax: 5,
-                        ticks: { display: false, stepSize: 1 },
-                        pointLabels: { font: { size: 14, family: "Microsoft JhengHei", weight: 'bold' }, color: '#555' }
-                    }
-                },
-                plugins: { legend: { display: false }, title: { display: true, text: '2025 蜜香紅茶・手沖', font: { size: 24, weight: 'bold' }, padding: { bottom: 20 }, color: '#6f4e37' } }
-            }
+            options: { responsive: true, scales: { r: { angleLines: { color: '#e0e0e0' }, grid: { color: '#f0f0f0' }, suggestedMin: 0, suggestedMax: 5, ticks: { display: false, stepSize: 1 }, pointLabels: { font: { size: 14, family: "Microsoft JhengHei", weight: 'bold' }, color: '#555' } } }, plugins: { legend: { display: false }, title: { display: true, text: '2025 蜜香紅茶・手沖', font: { size: 24, weight: 'bold' }, padding: { bottom: 20 }, color: '#6f4e37' } } }
         });
     }
 
@@ -199,11 +96,9 @@
         const color = document.getElementById('themeColor').value;
         const data = [1,2,3,4,5,6].map(i => document.getElementById('p'+i).value);
         data.forEach((v, i) => document.getElementById('v'+(i+1)).innerText = v);
-
         myChart.data.datasets[0].data = data;
         myChart.data.datasets[0].borderColor = color;
         myChart.data.datasets[0].pointBackgroundColor = color;
-        
         const r = parseInt(color.slice(1, 3), 16), g = parseInt(color.slice(3, 5), 16), b = parseInt(color.slice(5, 7), 16);
         myChart.data.datasets[0].backgroundColor = `rgba(${r}, ${g}, ${b}, 0.25)`;
         myChart.options.plugins.title.text = name;
@@ -214,13 +109,10 @@
         if(!text) return y;
         const paragraphs = text.split('\n');
         for (let p = 0; p < paragraphs.length; p++) {
-            let words = paragraphs[p].split('');
-            let line = '';
+            let words = paragraphs[p].split(''); let line = '';
             for(let n = 0; n < words.length; n++) {
                 let testLine = line + words[n];
-                if (ctx.measureText(testLine).width > maxWidth && n > 0) {
-                    ctx.fillText(line, x, y); line = words[n]; y += lineHeight;
-                } else { line = testLine; }
+                if (ctx.measureText(testLine).width > maxWidth && n > 0) { ctx.fillText(line, x, y); line = words[n]; y += lineHeight; } else { line = testLine; }
             }
             ctx.fillText(line, x, y); y += lineHeight;
         }
@@ -231,82 +123,68 @@
         const canvas = document.getElementById('radarChart');
         const name = document.getElementById('teaName').value;
         const desc = document.getElementById('teaDesc').value;
-        
+        const cupper = document.getElementById('cupperName').value;
         const tempCanvas = document.createElement('canvas');
         const ctx = tempCanvas.getContext('2d');
         const scale = 2; 
-        
-        let extraHeight = 320; // 預留給 SCA/TAGs 對照表
-        if(desc) extraHeight += 150;
-
-        tempCanvas.width = canvas.width * scale;
-        tempCanvas.height = (canvas.height * scale) + extraHeight;
-        
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-        
-        ctx.save();
-        ctx.scale(scale, scale);
-        ctx.drawImage(canvas, 0, 0);
-        ctx.restore();
-        
+        let extraHeight = 340; if(desc) extraHeight += 150;
+        tempCanvas.width = canvas.width * scale; tempCanvas.height = (canvas.height * scale) + extraHeight;
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        ctx.save(); ctx.scale(scale, scale); ctx.drawImage(canvas, 0, 0); ctx.restore();
         let currentY = (canvas.height * scale) + 40;
-        
-        // 1. 風味筆記
         if (desc) {
-            ctx.textAlign = "center";
-            ctx.font = `bold 32px "Microsoft JhengHei"`;
-            ctx.fillStyle = "#6f4e37"; 
-            ctx.fillText("📝 Cupping Notes", tempCanvas.width / 2, currentY);
-            currentY += 50;
-            
-            ctx.font = `26px "Microsoft JhengHei"`;
-            ctx.fillStyle = "#444"; 
-            currentY = wrapText(ctx, desc, tempCanvas.width / 2, currentY, tempCanvas.width * 0.85, 40);
-            currentY += 60;
+            ctx.textAlign = "center"; ctx.font = `bold 32px "Microsoft JhengHei"`; ctx.fillStyle = "#6f4e37"; ctx.fillText("📝 Cupping Notes", tempCanvas.width / 2, currentY); currentY += 50;
+            ctx.font = `26px "Microsoft JhengHei"`; ctx.fillStyle = "#444"; currentY = wrapText(ctx, desc, tempCanvas.width / 2, currentY, tempCanvas.width * 0.85, 40); currentY += 60;
         }
-
-        // 2. SCA x TAGs 對照表 (重點！)
-        ctx.textAlign = "center";
-        ctx.font = `bold 24px "Microsoft JhengHei"`;
-        ctx.fillStyle = "#888";
-        ctx.fillText("── SCA (Coffee) ⇄ TAGs (Tea) 對照表 ──", tempCanvas.width/2, currentY);
-        currentY += 40;
-
-        ctx.textAlign = "left";
-        const startX = 100;
-        const col2X = tempCanvas.width / 2 + 60;
-        
-        ctx.font = `bold 22px "Microsoft JhengHei"`;
-        ctx.fillStyle = "#6f4e37"; // 咖啡色字
-
-        // 左欄
+        if(cupper) { ctx.textAlign = "right"; ctx.font = `italic 24px "Microsoft JhengHei"`; ctx.fillStyle = "#aaa"; ctx.fillText(`Cupper: ${cupper} / ${new Date().toLocaleDateString()}`, tempCanvas.width - 50, 50); }
+        ctx.textAlign = "center"; ctx.font = `bold 24px "Microsoft JhengHei"`; ctx.fillStyle = "#888"; ctx.fillText("── SCA (Coffee) ⇄ TAGs (Tea) ──", tempCanvas.width/2, currentY); currentY += 40;
+        ctx.textAlign = "left"; const startX = 100; const col2X = tempCanvas.width / 2 + 60;
         for(let i=0; i<3; i++) {
-            let txt = `${legendData[i].coffee} ⇄ ${legendData[i].tea}`;
-            ctx.fillText(txt, startX, currentY + (i*60));
-            
-            ctx.font = `18px "Microsoft JhengHei"`; // 小字說明
-            ctx.fillStyle = "#666";
-            ctx.fillText(legendData[i].desc, startX, currentY + (i*60) + 25);
-            ctx.font = `bold 22px "Microsoft JhengHei"`; // 還原
-            ctx.fillStyle = "#6f4e37";
+            ctx.font = `bold 22px "Microsoft JhengHei"`; ctx.fillStyle = "#6f4e37"; ctx.fillText(`${legendData[i].coffee} ⇄ ${legendData[i].tea}`, startX, currentY + (i*60));
+            ctx.font = `18px "Microsoft JhengHei"`; ctx.fillStyle = "#666"; ctx.fillText(legendData[i].desc, startX, currentY + (i*60) + 25);
         }
-        // 右欄
         for(let i=3; i<6; i++) {
-            let txt = `${legendData[i].coffee} ⇄ ${legendData[i].tea}`;
-            ctx.fillText(txt, col2X, currentY + ((i-3)*60));
-            
-            ctx.font = `18px "Microsoft JhengHei"`;
-            ctx.fillStyle = "#666";
-            ctx.fillText(legendData[i].desc, col2X, currentY + ((i-3)*60) + 25);
-            ctx.font = `bold 22px "Microsoft JhengHei"`;
-            ctx.fillStyle = "#6f4e37";
+            ctx.font = `bold 22px "Microsoft JhengHei"`; ctx.fillStyle = "#6f4e37"; ctx.fillText(`${legendData[i].coffee} ⇄ ${legendData[i].tea}`, col2X, currentY + ((i-3)*60));
+            ctx.font = `18px "Microsoft JhengHei"`; ctx.fillStyle = "#666"; ctx.fillText(legendData[i].desc, col2X, currentY + ((i-3)*60) + 25);
         }
+        const link = document.createElement('a'); link.download = `${name}_評鑑卡.png`; link.href = tempCanvas.toDataURL('image/png'); link.click();
+    }
 
-        const link = document.createElement('a');
-        link.download = `${name}_SCA_TAGs評鑑卡.png`;
-        link.href = tempCanvas.toDataURL('image/png');
-        link.click();
+    // --- 核心：傳送資料到 Google Sheets ---
+    function saveToGoogleSheet() {
+        const btn = document.getElementById('submitBtn');
+
+        // 1. 鎖定按鈕避免重複點擊
+        btn.disabled = true;
+        btn.innerText = "☁️ 上傳中...";
+
+        const data = {
+            cupper: document.getElementById('cupperName').value || 'Anonymous',
+            email: document.getElementById('cupperEmail').value || '-',
+            tea: document.getElementById('teaName').value,
+            scores: [1,2,3,4,5,6].map(i => document.getElementById('p'+i).value),
+            note: document.getElementById('teaDesc').value || ''
+        };
+
+        // 2. 發送資料 (跨域 POST)
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors", // 重要：Google Apps Script 簡易請求需要此模式
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            alert("✅ 資料已成功上傳至 Google Sheet！\n(圖片將接著下載)");
+            downloadImage(); // 上傳成功後，自動下載圖片
+            btn.disabled = false;
+            btn.innerText = "☁️ 上傳 Google Sheet 並下載圖卡";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("❌ 上傳失敗，請檢查網路或 Script 設定");
+            btn.disabled = false;
+            btn.innerText = "☁️ 上傳 Google Sheet 並下載圖卡";
+        });
     }
 
     window.onload = initChart;
