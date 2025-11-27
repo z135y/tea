@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCA x TAGs 評鑑 (Pro Ver.)</title>
+    <title>SCA x TAGs 評鑑 (Cloud Sync)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: "Microsoft JhengHei", sans-serif; background: #ece9e6; display: flex; justify-content: center; padding: 20px; min-height: 100vh; color: #2c3e50; margin: 0; }
@@ -89,7 +89,7 @@
 
 <script>
     // ==========================================
-    // ✅ 已更新為您的新 Script 網址
+    // ✅ 您的 Google Script 網址 (已更新)
     // ==========================================
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzu5OL3BnBf8b2QMahf72Kg2b6G2fdy0rSe2Dwygw30YBqEYqUhN9xCxpsDDdAUHdhQ/exec";
     // ==========================================
@@ -193,12 +193,8 @@
     // --- 上傳功能 ---
     function saveToGoogleSheet() {
         const btn = document.getElementById('submitBtn');
-        
         if(GOOGLE_SCRIPT_URL.includes("您的")) { alert("請填入 Script 網址！"); return; }
-
-        btn.disabled = true;
-        btn.innerText = "☁️ 正在產生圖片並上傳...";
-
+        btn.disabled = true; btn.innerText = "☁️ 正在產生圖片並上傳...";
         generateImageBase64(function(base64Image) {
             const data = {
                 cupper: document.getElementById('cupperName').value || 'Anonymous',
@@ -206,31 +202,15 @@
                 tea: document.getElementById('teaName').value,
                 scores: [1,2,3,4,5,6].map(i => document.getElementById('p'+i).value),
                 note: document.getElementById('teaDesc').value || '',
-                image: base64Image // 將圖片編碼一起送出
+                image: base64Image
             };
-
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            })
+            fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
             .then(() => {
                 alert("✅ 成功！資料與圖片已同步至雲端。");
-                // 額外下載一份給使用者留存
-                const link = document.createElement('a');
-                link.download = `${data.tea}_評鑑卡.png`;
-                link.href = base64Image;
-                link.click();
-                
-                btn.disabled = false;
-                btn.innerText = "☁️ 上傳資料 (含圖片)";
+                const link = document.createElement('a'); link.download = `${data.tea}_評鑑卡.png`; link.href = base64Image; link.click();
+                btn.disabled = false; btn.innerText = "☁️ 上傳資料 (含圖片)";
             })
-            .catch(err => {
-                alert("❌ 上傳失敗：" + err);
-                btn.disabled = false;
-                btn.innerText = "☁️ 重新上傳";
-            });
+            .catch(err => { alert("❌ 上傳失敗：" + err); btn.disabled = false; btn.innerText = "☁️ 重新上傳"; });
         });
     }
 
@@ -239,7 +219,3 @@
 
 </body>
 </html>
-
-
-
-
