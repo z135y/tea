@@ -3,61 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCA x TAGs Pro 評鑑 (3-Sample Compare)</title>
+    <title>SCA x TAGs V3 (Param Lab)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* --- 核心架構 --- */
         :root { --c-a: #e74c3c; --c-b: #3498db; --c-c: #27ae60; --bg: #f4f6f7; }
         body { font-family: "Microsoft JhengHei", sans-serif; background: var(--bg); color: #2c3e50; margin: 0; padding: 20px; display: flex; justify-content: center; }
         .container { background: #fff; width: 100%; max-width: 1400px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-wrap: wrap; overflow: hidden; }
         
         /* --- 左側控制區 --- */
-        .controls { flex: 1.2; min-width: 400px; padding: 30px; border-right: 1px solid #eee; height: 90vh; overflow-y: auto; background: #fff; }
+        .controls { flex: 1.2; min-width: 450px; padding: 30px; border-right: 1px solid #eee; height: 90vh; overflow-y: auto; background: #fff; }
         .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #6f4e37; padding-bottom: 15px; margin-bottom: 20px; }
         h2 { margin: 0; color: #6f4e37; font-weight: 900; }
         
-        /* --- 區塊標題 --- */
-        .section-title { font-size: 15px; color: #555; margin: 25px 0 15px 0; border-left: 4px solid #6f4e37; padding-left: 10px; font-weight: bold; background: #f9f9f9; padding: 8px 10px; border-radius: 0 5px 5px 0; }
+        .section-title { font-size: 14px; color: #555; margin: 20px 0 10px 0; border-left: 4px solid #6f4e37; padding-left: 10px; font-weight: bold; background: #f9f9f9; padding: 5px 10px; border-radius: 0 5px 5px 0; }
 
-        /* --- 全域設定 (適用所有樣品) --- */
-        .global-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .full-width { grid-column: span 2; }
-        .input-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #7f8c8d; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #dfe6e9; border-radius: 6px; font-size: 14px; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: #6f4e37; outline: none; }
+        /* --- 全域資訊 --- */
+        .global-meta { display: flex; gap: 10px; margin-bottom: 20px; }
+        .global-meta input, .global-meta select { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
 
-        /* --- 評分核心區 (Grid Layout) --- */
-        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
-        .score-label { font-size: 14px; font-weight: bold; color: #2c3e50; }
-        .term-sub { font-size: 12px; color: #7f8c8d; display: block; font-weight: normal; }
+        /* --- 核心：獨立樣本參數卡片 --- */
+        .sample-deck { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .sample-card { padding: 15px; border-radius: 8px; background: #fafafa; border-top: 5px solid #ccc; display: flex; flex-direction: column; gap: 8px; }
         
-        /* 滑桿設計 */
-        .range-wrap { text-align: center; position: relative; }
-        .range-wrap input { width: 100%; cursor: pointer; height: 5px; margin: 10px 0; }
-        .range-val { font-size: 14px; font-weight: bold; display: block; }
+        /* A/B/C 專屬樣式 */
+        .card-a { border-color: var(--c-a); background: rgba(231, 76, 60, 0.03); }
+        .card-b { border-color: var(--c-b); background: rgba(52, 152, 219, 0.03); }
+        .card-c { border-color: var(--c-c); background: rgba(39, 174, 96, 0.03); }
+
+        .sample-card label { font-size: 11px; font-weight: bold; color: #888; margin-bottom: -5px; }
+        .sample-card input { width: 100%; padding: 6px; font-size: 13px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-weight: bold; }
+        .sample-card input:focus { border-color: #666; outline: none; }
         
-        /* A/B/C 專屬色系 */
+        /* 輸入框顏色強調 */
+        .card-a input { color: var(--c-a); border-left: 3px solid var(--c-a); }
+        .card-b input { color: var(--c-b); border-left: 3px solid var(--c-b); }
+        .card-c input { color: var(--c-c); border-left: 3px solid var(--c-c); }
+
+        /* --- 評分區 --- */
+        .score-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 8px; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+        .score-label { font-size: 13px; font-weight: bold; }
+        .term-sub { font-size: 11px; color: #999; display: block; }
+        
+        .range-wrap { text-align: center; }
+        .range-wrap input { width: 100%; height: 4px; cursor: pointer; margin: 5px 0; }
+        .range-val { font-size: 14px; font-weight: bold; }
+        
         .sample-a input[type=range] { accent-color: var(--c-a); } .color-a { color: var(--c-a); }
         .sample-b input[type=range] { accent-color: var(--c-b); } .color-b { color: var(--c-b); }
         .sample-c input[type=range] { accent-color: var(--c-c); } .color-c { color: var(--c-c); }
 
-        /* --- 樣品名稱輸入列 --- */
-        .sample-names { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; align-items: end; }
-        .sample-col input { text-align: center; font-weight: bold; border-width: 2px; }
-        .sample-col:nth-child(2) input { border-color: var(--c-a); color: var(--c-a); }
-        .sample-col:nth-child(3) input { border-color: var(--c-b); color: var(--c-b); }
-        .sample-col:nth-child(4) input { border-color: var(--c-c); color: var(--c-c); }
-
-        /* --- 右側預覽區 --- */
-        .preview { flex: 1.5; background: #fdfdfd; padding: 30px; display: flex; flex-direction: column; align-items: center; position: relative; }
-        .chart-container { width: 100%; max-width: 650px; position: relative; margin-bottom: 20px; }
-        
-        .btn-submit { background: linear-gradient(135deg, #2c3e50, #4ca1af); color: white; border: none; padding: 15px 50px; font-size: 16px; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; width: 80%; }
+        /* --- 右側預覽 --- */
+        .preview { flex: 1.5; background: #fff; padding: 30px; display: flex; flex-direction: column; align-items: center; }
+        .chart-container { width: 100%; max-width: 650px; margin-bottom: 20px; }
+        .btn-submit { background: linear-gradient(135deg, #2c3e50, #4ca1af); color: white; border: none; padding: 15px 50px; font-size: 16px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 80%; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
-        .btn-submit:disabled { background: #bdc3c7; cursor: wait; }
+        .btn-submit:disabled { background: #ccc; }
 
-        /* RWD */
-        @media (max-width: 900px) { .container { flex-direction: column; } .controls { height: auto; border-right: none; } .score-grid { grid-template-columns: 1fr; border: 1px solid #eee; padding: 15px; border-radius: 8px; } .sample-names { display: none; } /* Mobile hide top names, rely on inline colors */ }
+        @media (max-width: 900px) { 
+            .container { flex-direction: column; } 
+            .controls { height: auto; border-right: none; }
+            .sample-deck { grid-template-columns: 1fr; } /* 手機版變成垂直排列 */
+            .score-grid { grid-template-columns: 1fr; border: 1px solid #eee; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -65,54 +72,65 @@
 <div class="container">
     <div class="controls">
         <div class="header">
-            <h2>SCA x TAGs Pro</h2>
-            <div style="font-size:12px; color:#999;">Ver 2.0 Multi-Sample</div>
+            <h2>SCA x TAGs Lab</h2>
+            <div style="font-size:12px; color:#999;">V3.0 Independent Params</div>
         </div>
 
-        <div class="section-title">⚙️ 參數設定 (Unified Database)</div>
-        <div class="global-settings">
-            <div class="input-group">
-                <label>茶種分類 (Category)</label>
-                <select id="teaCategory" onchange="autoFillStyle()">
-                    <option value="Black">紅茶 (Black Tea)</option>
-                    <option value="Oolong">烏龍茶 (Oolong Tea)</option>
-                    <option value="Green">綠茶 (Green Tea)</option>
-                    <option value="White">白茶 (White Tea)</option>
-                    <option value="Herbal">花草/混調 (Blend)</option>
-                </select>
+        <div class="section-title">👤 基本資訊</div>
+        <div class="global-meta">
+            <select id="teaCategory">
+                <option value="Black">紅茶 (Black)</option>
+                <option value="Oolong">烏龍 (Oolong)</option>
+                <option value="Green">綠茶 (Green)</option>
+                <option value="Blend">混調 (Blend)</option>
+            </select>
+            <input type="text" id="cupperName" placeholder="Cupper Name">
+            <input type="email" id="cupperEmail" placeholder="Email for Report">
+        </div>
+
+        <div class="section-title">🧪 樣本參數設定 (獨立控制)</div>
+        <div class="sample-deck">
+            <div class="sample-card card-a">
+                <label>SAMPLE A (名稱)</label>
+                <input type="text" id="nameA" value="標準沖泡" oninput="updateChart()">
+                <label>Temp (°C) / Time</label>
+                <input type="text" id="paramA1" value="95°C / 5min" placeholder="95°C / 5min">
+                <label>Ratio (g:ml)</label>
+                <input type="text" id="paramA2" value="3g : 150ml">
             </div>
-            <div class="input-group"><label>評鑑者 (Cupper)</label><input type="text" id="cupperName" placeholder="您的姓名"></div>
-            <div class="input-group"><label>粉水比 (Ratio)</label><input type="text" id="brewRatio" value="1:50" placeholder="例 1:50"></div>
-            <div class="input-group"><label>浸泡時間 (Time)</label><input type="text" id="brewTime" value="5 min" placeholder="例 5 min"></div>
-            <div class="input-group full-width"><label>接收 Email (必填)</label><input type="email" id="cupperEmail" placeholder="name@company.com"></div>
-        </div>
-
-        <div class="section-title">🧪 樣品定義 & 快速比較</div>
-        <div class="sample-names">
-            <div style="font-size:12px; color:#888; text-align:right; padding-top:10px;">樣品名稱 ➤</div>
-            <div class="sample-col"><input type="text" id="nameA" value="樣品 A" oninput="updateChart()" placeholder="Sample A"></div>
-            <div class="sample-col"><input type="text" id="nameB" value="樣品 B" oninput="updateChart()" placeholder="Sample B"></div>
-            <div class="sample-col"><input type="text" id="nameC" value="樣品 C" oninput="updateChart()" placeholder="Sample C"></div>
-        </div>
-
-        <div id="scoreArea">
+            <div class="sample-card card-b">
+                <label>SAMPLE B (名稱)</label>
+                <input type="text" id="nameB" value="降溫測試" oninput="updateChart()">
+                <label>Temp (°C) / Time</label>
+                <input type="text" id="paramB1" value="85°C / 6min" placeholder="85°C / 6min">
+                <label>Ratio (g:ml)</label>
+                <input type="text" id="paramB2" value="3g : 150ml">
             </div>
+            <div class="sample-card card-c">
+                <label>SAMPLE C (名稱)</label>
+                <input type="text" id="nameC" value="濃縮測試" oninput="updateChart()">
+                <label>Temp (°C) / Time</label>
+                <input type="text" id="paramC1" value="95°C / 3min" placeholder="95°C / 3min">
+                <label>Ratio (g:ml)</label>
+                <input type="text" id="paramC2" value="5g : 150ml">
+            </div>
+        </div>
+
+        <div class="section-title">📊 官能評鑑</div>
+        <div id="scoreArea"></div>
 
         <div class="section-title">📝 綜合筆記</div>
-        <textarea id="notes" rows="3" placeholder="針對這三款茶的綜合風味比較或差異描述..."></textarea>
+        <textarea id="notes" rows="3" style="width:100%; border-color:#ddd; padding:10px;" placeholder="實驗結論：A組香氣較佳但略澀，B組甜感突出..."></textarea>
     </div>
 
     <div class="preview">
         <div class="chart-container"><canvas id="radarChart"></canvas></div>
-        <button class="btn-submit" id="submitBtn" onclick="processData()">🚀 極速上傳並寄送報告</button>
-        <p style="font-size:12px; color:#aaa; margin-top:10px;">*系統將自動生成三樣品比較圖與數據表</p>
+        <button class="btn-submit" id="submitBtn" onclick="processData()">🚀 生成實驗報告</button>
     </div>
 </div>
 
 <script>
-    // ================= CONFIG =================
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwe4QryJQ0Gcf6guVEXs1a3Z_tM3la_oq-queI09S0Qd8zql3o6L87XF3-sh705AHNymg/exec";
-    // ==========================================
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwe4QryJQ0Gcf6guVEXs1a3Z_tM3la_oq-queI09S0Qd8zql3o6L87XF3-sh705AHNymg/exec"; 
 
     const attributes = [
         { en: "Acidity", ch: "明亮鮮爽", key: "p1" },
@@ -125,7 +143,6 @@
 
     let myChart;
 
-    // 初始化：生成 HTML 與 圖表
     window.onload = function() {
         generateScoreInputs();
         initChart();
@@ -167,9 +184,9 @@
             data: {
                 labels: attributes.map(a => [a.en, a.ch]),
                 datasets: [
-                    { label: 'Sample A', data: [4,4,4,4,4,4], borderColor: '#e74c3c', backgroundColor: 'rgba(231, 76, 60, 0.1)', borderWidth: 2 },
-                    { label: 'Sample B', data: [3,3,3,3,3,3], borderColor: '#3498db', backgroundColor: 'rgba(52, 152, 219, 0.1)', borderWidth: 2 },
-                    { label: 'Sample C', data: [2,2,2,2,2,2], borderColor: '#27ae60', backgroundColor: 'rgba(39, 174, 96, 0.1)', borderWidth: 2 }
+                    { label: 'A', data: [4,4,4,4,4,4], borderColor: '#e74c3c', backgroundColor: 'rgba(231, 76, 60, 0.1)', borderWidth: 2 },
+                    { label: 'B', data: [3,3,3,3,3,3], borderColor: '#3498db', backgroundColor: 'rgba(52, 152, 219, 0.1)', borderWidth: 2 },
+                    { label: 'C', data: [2,2,2,2,2,2], borderColor: '#27ae60', backgroundColor: 'rgba(39, 174, 96, 0.1)', borderWidth: 2 }
                 ]
             },
             options: {
@@ -186,110 +203,133 @@
         const dataC = attributes.map((_, i) => document.getElementById(`C_p${i}`).value);
         
         myChart.data.datasets[0].label = document.getElementById('nameA').value || 'A';
-        myChart.data.datasets[0].data = dataA;
-        
         myChart.data.datasets[1].label = document.getElementById('nameB').value || 'B';
-        myChart.data.datasets[1].data = dataB;
-
         myChart.data.datasets[2].label = document.getElementById('nameC').value || 'C';
+        
+        myChart.data.datasets[0].data = dataA;
+        myChart.data.datasets[1].data = dataB;
         myChart.data.datasets[2].data = dataC;
-
         myChart.update();
     }
 
-    function autoFillStyle() {
-        // 可根據茶種變更背景色或預設值 (此處為擴充預留)
-        console.log("Category changed: " + document.getElementById('teaCategory').value);
-    }
-
-    // --- 圖片生成 (含表格數據) ---
     function generateLayoutImage(callback) {
         const canvas = document.getElementById('radarChart');
         const tempCanvas = document.createElement('canvas');
         const ctx = tempCanvas.getContext('2d');
         
-        // 設定畫布尺寸 (增加下方數據表空間)
+        // 版面設定
         const scale = 2;
-        const extraH = 400; 
+        const extraH = 450; // 增加高度以容納詳細參數表
         tempCanvas.width = canvas.width * scale;
         tempCanvas.height = (canvas.height * scale) + extraH;
         
-        // 白色背景
         ctx.fillStyle = '#fff'; ctx.fillRect(0,0,tempCanvas.width, tempCanvas.height);
         
-        // 繪製圖表
+        // 繪圖
         ctx.save(); ctx.scale(scale, scale); ctx.drawImage(canvas, 0, 0); ctx.restore();
 
-        // 繪製標題與資訊
         let y = (canvas.height * scale) + 20;
         const cw = tempCanvas.width;
         
-        ctx.font = "bold 30px Microsoft JhengHei"; ctx.textAlign = "center"; ctx.fillStyle = "#333";
-        ctx.fillText(`SCA x TAGs 評鑑比較 (${document.getElementById('teaCategory').value})`, cw/2, 50);
+        // 標題
+        ctx.font = "bold 32px Microsoft JhengHei"; ctx.textAlign = "center"; ctx.fillStyle = "#333";
+        ctx.fillText(`SCA x TAGs 感官實驗室`, cw/2, 50);
 
-        ctx.font = "24px Microsoft JhengHei"; ctx.fillStyle = "#666";
-        const meta = `Cupper: ${document.getElementById('cupperName').value} | Ratio: ${document.getElementById('brewRatio').value} | Time: ${document.getElementById('brewTime').value}`;
-        ctx.fillText(meta, cw/2, y); y += 50;
-
-        // 繪製簡易數據表
+        // 表格設定
         const colW = cw / 4;
-        const headers = ["Attribute", document.getElementById('nameA').value, document.getElementById('nameB').value, document.getElementById('nameC').value];
+        const startY = y;
+        const rowH = 40;
         
-        // 表頭
-        ctx.fillStyle = "#eee"; ctx.fillRect(50, y-30, cw-100, 40);
-        ctx.fillStyle = "#000"; ctx.font = "bold 22px Microsoft JhengHei";
-        headers.forEach((h, i) => ctx.fillText(h, 50 + colW*i + colW/2, y)); 
-        y += 40;
+        // 定義表格內容 (含參數)
+        const headers = ["項目 Item", 
+            document.getElementById('nameA').value, 
+            document.getElementById('nameB').value, 
+            document.getElementById('nameC').value
+        ];
 
-        // 內容
-        ctx.font = "20px Microsoft JhengHei";
+        const params1 = ["Temp/Time", 
+            document.getElementById('paramA1').value, 
+            document.getElementById('paramB1').value, 
+            document.getElementById('paramC1').value
+        ];
+
+        const params2 = ["Ratio", 
+            document.getElementById('paramA2').value, 
+            document.getElementById('paramB2').value, 
+            document.getElementById('paramC2').value
+        ];
+
+        // 繪製表頭 (背景色)
+        ctx.fillStyle = "#f2f2f2"; ctx.fillRect(40, y, cw-80, rowH*3); // 參數區背景
+        
+        // 繪製參數文字
+        const drawRow = (data, color, isBold, offsetY) => {
+            data.forEach((txt, i) => {
+                ctx.fillStyle = (i===0) ? "#555" : color[i-1];
+                ctx.font = isBold ? "bold 22px Microsoft JhengHei" : "20px Microsoft JhengHei";
+                ctx.fillText(txt, 40 + colW*i + colW/2, offsetY);
+            });
+        };
+
+        const colors = ["#e74c3c", "#3498db", "#27ae60"];
+
+        // 參數區內容
+        drawRow(headers, colors, true, y + 28);
+        drawRow(params1, colors, false, y + 28 + rowH);
+        drawRow(params2, colors, false, y + 28 + rowH*2);
+        
+        y += rowH*3 + 20; // 往下移動畫分數
+
+        // 分數區
         attributes.forEach((attr, idx) => {
             const valA = document.getElementById(`A_p${idx}`).value;
             const valB = document.getElementById(`B_p${idx}`).value;
             const valC = document.getElementById(`C_p${idx}`).value;
             
-            ctx.fillStyle = "#444"; ctx.textAlign="center";
-            ctx.fillText(attr.en, 50 + colW/2, y);
+            ctx.fillStyle = "#333"; ctx.font = "bold 20px Microsoft JhengHei";
+            ctx.fillText(attr.en, 40 + colW/2, y);
             
-            ctx.fillStyle = "#e74c3c"; ctx.fillText(valA, 50 + colW*1.5, y);
-            ctx.fillStyle = "#3498db"; ctx.fillText(valB, 50 + colW*2.5, y);
-            ctx.fillStyle = "#27ae60"; ctx.fillText(valC, 50 + colW*3.5, y);
+            ctx.fillStyle = colors[0]; ctx.fillText(valA, 40 + colW*1.5, y);
+            ctx.fillStyle = colors[1]; ctx.fillText(valB, 40 + colW*2.5, y);
+            ctx.fillStyle = colors[2]; ctx.fillText(valC, 40 + colW*3.5, y);
             
-            // 畫底線
-            ctx.strokeStyle="#eee"; ctx.beginPath(); ctx.moveTo(50, y+10); ctx.lineTo(cw-50, y+10); ctx.stroke();
+            ctx.strokeStyle="#eee"; ctx.beginPath(); ctx.moveTo(40, y+10); ctx.lineTo(cw-40, y+10); ctx.stroke();
             y += 40;
         });
 
-        // 輸出 JPEG (0.7 品質壓縮 = 加速關鍵)
         callback(tempCanvas.toDataURL('image/jpeg', 0.7));
     }
 
     function processData() {
         const btn = document.getElementById('submitBtn');
         const email = document.getElementById('cupperEmail').value;
-        if(!email.includes("@")) { alert("請填寫正確 Email"); return; }
+        if(!email.includes("@")) { alert("請填寫 Email"); return; }
         
-        btn.disabled = true; btn.innerText = "⏳ 壓縮圖片並上傳中...";
+        btn.disabled = true; btn.innerText = "⏳ 處理中...";
 
         generateLayoutImage((base64) => {
-            // 構建三筆資料 (或一筆合併資料，視您 Sheet 邏輯，這裡採用單筆寬表以符合既有結構)
             const payload = {
                 cupper: document.getElementById('cupperName').value,
                 email: email,
                 category: document.getElementById('teaCategory').value,
-                ratio: document.getElementById('brewRatio').value,
-                time: document.getElementById('brewTime').value,
-                // A 樣品
+                // A組完整資料
                 teaA: document.getElementById('nameA').value,
+                paramA1: document.getElementById('paramA1').value, // 溫/時
+                paramA2: document.getElementById('paramA2').value, // 比例
                 scoresA: attributes.map((_, i) => document.getElementById(`A_p${i}`).value),
-                // B 樣品
+                // B組完整資料
                 teaB: document.getElementById('nameB').value,
+                paramB1: document.getElementById('paramB1').value,
+                paramB2: document.getElementById('paramB2').value,
                 scoresB: attributes.map((_, i) => document.getElementById(`B_p${i}`).value),
-                // C 樣品
+                // C組完整資料
                 teaC: document.getElementById('nameC').value,
+                paramC1: document.getElementById('paramC1').value,
+                paramC2: document.getElementById('paramC2').value,
                 scoresC: attributes.map((_, i) => document.getElementById(`C_p${i}`).value),
+                
                 note: document.getElementById('notes').value,
-                image: base64 // 這是 JPEG 
+                image: base64
             };
 
             fetch(GOOGLE_SCRIPT_URL, {
@@ -298,8 +338,8 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             }).then(() => {
-                alert("✅ 上傳成功！圖片已寄出。");
-                btn.disabled = false; btn.innerText = "🚀 極速上傳並寄送報告";
+                alert("✅ 實驗數據已上傳！");
+                btn.disabled = false; btn.innerText = "🚀 生成實驗報告";
             }).catch(e => {
                 alert("❌ 錯誤：" + e);
                 btn.disabled = false;
